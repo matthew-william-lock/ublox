@@ -62,6 +62,9 @@
 #include <ublox_msgs/RxmSFRB.h>
 #include <ublox_msgs/RxmSFRBX.h>
 #include <ublox_msgs/RxmSVSI.h>
+#include <ublox_msgs/RxmMeasX.h>
+#include <ublox_msgs/RxmMeasX_SV.h>
+
 
 #include <ublox_msgs/Inf.h>
 #include <ublox_msgs/Ack.h>
@@ -186,6 +189,7 @@ namespace Message {
     static const uint8_t SFRB = RxmSFRB::MESSAGE_ID;
     static const uint8_t SFRBX = RxmSFRBX::MESSAGE_ID;
     static const uint8_t SVSI = RxmSVSI::MESSAGE_ID;
+    static const uint8_t MEASX = RxmMeasX::MESSAGE_ID;
   }
 
   namespace INF {

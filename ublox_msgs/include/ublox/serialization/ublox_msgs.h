@@ -475,6 +475,66 @@ struct Serializer<ublox_msgs::RxmRAWX_<ContainerAllocator> > {
       ros::serialization::serialize(stream, m.meas[i]);
   }
 };
+///
+/// @brief Serializes the RxmMeasX message which has a repeated block.
+///
+template <typename ContainerAllocator>
+struct Serializer<ublox_msgs::RxmMeasX_<ContainerAllocator> > {
+  typedef ublox_msgs::RxmMeasX_<ContainerAllocator> Msg;
+  typedef boost::call_traits<Msg> CallTraits;
+
+  static void read(const uint8_t *data, uint32_t count, 
+                   typename CallTraits::reference m) {
+    ros::serialization::IStream stream(const_cast<uint8_t *>(data), count);
+    stream.next(m.version);
+    stream.next(m.reserved0);
+    stream.next(m.gpsTOW);
+    stream.next(m.gloTOW);
+    stream.next(m.bdsTOW);
+    stream.next(m.reserved1);
+    stream.next(m.qzssTOW);
+    stream.next(m.gpsTOWacc);
+    stream.next(m.gloTOWacc);
+    stream.next(m.bdsTOWacc);
+    stream.next(m.reserved2);
+    stream.next(m.qzssTOWacc); 
+    stream.next(m.numSV);
+    stream.next(m.flags);
+    stream.next(m.reserved3); 
+    m.sv.resize(m.numSV);
+    for(std::size_t i = 0; i < m.sv.size(); ++i) 
+      ros::serialization::deserialize(stream, m.sv[i]);
+  }
+
+  static uint32_t serializedLength (typename CallTraits::param_type m) {
+    return 44 + 24 * m.numSV;
+  }
+
+  static void write(uint8_t *data, uint32_t size, 
+                    typename CallTraits::param_type m) {
+    if(m.sv.size() != m.numSV) {
+      ROS_ERROR("RxmMeasX numSV must equal sv size");
+    }
+    ros::serialization::OStream stream(data, size);
+    stream.next(m.version);
+    stream.next(m.reserved0);
+    stream.next(m.gpsTOW);
+    stream.next(m.gloTOW);
+    stream.next(m.bdsTOW);
+    stream.next(m.reserved1);
+    stream.next(m.qzssTOW);
+    stream.next(m.gpsTOWacc);
+    stream.next(m.gloTOWacc);
+    stream.next(m.bdsTOWacc);
+    stream.next(m.reserved2);
+    stream.next(m.qzssTOWacc); 
+    stream.next(static_cast<typename Msg::_numSV_type>(m.sv.size()));
+    stream.next(m.flags);
+    stream.next(m.reserved3); 
+    for(std::size_t i = 0; i < m.sv.size(); ++i) 
+      ros::serialization::serialize(stream, m.sv[i]);
+  }
+};
 
 ///
 /// @brief Serializes the RxmSFRBX message which has a repeated block.

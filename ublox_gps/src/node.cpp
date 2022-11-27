@@ -1235,6 +1235,19 @@ bool UbloxFirmware8::configureUblox() {
 }
 
 void UbloxFirmware8::subscribe() {
+
+
+  // Subscribe to RXM Meas
+  nh->param("publish/rxm/measx", enabled["rxm_measx"], enabled["rxm"]);
+  if (enabled["rxm_measx"])
+    gps.subscribe<ublox_msgs::RxmMeasX>(boost::bind(
+        publish<ublox_msgs::RxmMeasX>, _1, "rxmmeasx"), kSubscribeRate);
+
+  // Subscribe to RXM Raw
+  nh->param("publish/rxm/rawx", enabled["rxm_rawx"], enabled["rxm"]);
+  if (enabled["rxm_rawx"])
+    gps.subscribe<ublox_msgs::RxmRAWX>(boost::bind(
+        publish<ublox_msgs::RxmRAWX>, _1, "rxmrawx"), kSubscribeRate);
   // Whether to publish Nav PVT messages
   nh->param("publish/nav/pvt", enabled["nav_pvt"], enabled["nav"]);
   // Subscribe to Nav PVT
@@ -1267,11 +1280,18 @@ void RawDataProduct::subscribe() {
   // Defaults to true instead of to all
   nh->param("publish/rxm/all", enabled["rxm"], true);
 
+
+  // Subscribe to RXM Meas
+  nh->param("publish/rxm/measx", enabled["rxm_measx"], enabled["rxm"]);
+  if (enabled["rxm_measx"])
+    gps.subscribe<ublox_msgs::RxmMeasX>(boost::bind(
+        publish<ublox_msgs::RxmMeasX>, _1, "rxmmeasx"), kSubscribeRate);
+        
   // Subscribe to RXM Raw
-  nh->param("publish/rxm/raw", enabled["rxm_raw"], enabled["rxm"]);
-  if (enabled["rxm_raw"])
-    gps.subscribe<ublox_msgs::RxmRAW>(boost::bind(
-        publish<ublox_msgs::RxmRAW>, _1, "rxmraw"), kSubscribeRate);
+  nh->param("publish/rxm/rawx", enabled["rxm_rawx"], enabled["rxm"]);
+  if (enabled["rxm_rawx"])
+    gps.subscribe<ublox_msgs::RxmRAWX>(boost::bind(
+        publish<ublox_msgs::RxmRAWX>, _1, "rxmrawx"), kSubscribeRate);
 
   // Subscribe to RXM SFRB
   nh->param("publish/rxm/sfrb", enabled["rxm_sfrb"], enabled["rxm"]);
@@ -1293,9 +1313,12 @@ void RawDataProduct::subscribe() {
 }
 
 void RawDataProduct::initializeRosDiagnostics() {
-  if (enabled["rxm_raw"])
+  if (enabled["rxm_rawx"])
     freq_diagnostics_.push_back(boost::shared_ptr<UbloxTopicDiagnostic>(
-      new UbloxTopicDiagnostic("rxmraw", kRtcmFreqTol, kRtcmFreqWindow)));
+      new UbloxTopicDiagnostic("rxmrawx", kRtcmFreqTol, kRtcmFreqWindow)));
+  if (enabled["rxm_measx"])
+    freq_diagnostics_.push_back(boost::shared_ptr<UbloxTopicDiagnostic>(
+      new UbloxTopicDiagnostic("rxmmeasx", kRtcmFreqTol, kRtcmFreqWindow)));
   if (enabled["rxm_sfrb"])
     freq_diagnostics_.push_back(boost::shared_ptr<UbloxTopicDiagnostic>(
       new UbloxTopicDiagnostic("rxmsfrb", kRtcmFreqTol, kRtcmFreqWindow)));
@@ -1541,11 +1564,33 @@ bool HpgRefProduct::configureUblox() {
 }
 
 void HpgRefProduct::subscribe() {
+
+  ROS_ERROR("PLEASE SUBSCRIBE TO THE FOLLOWING TOPICS:");
+
+
+  // Subscribe to RXM Meas
+  nh->param("publish/rxm/measx", enabled["rxm_measx"], enabled["rxm"]);
+  if (enabled["rxm_measx"])
+    gps.subscribe<ublox_msgs::RxmMeasX>(boost::bind(
+        publish<ublox_msgs::RxmMeasX>, _1, "rxmmeasx"), kSubscribeRate);
+
   // Whether to publish Nav Survey-In messages
   nh->param("publish/nav/svin", enabled["nav_svin"], enabled["nav"]);
   // Subscribe to Nav Survey-In
   gps.subscribe<ublox_msgs::NavSVIN>(boost::bind(
       &HpgRefProduct::callbackNavSvIn, this, _1), kSubscribeRate);
+
+  // Subscribe to SFRBX messages
+  nh->param("publish/rxm/sfrb", enabled["rxm_sfrb"], enabled["rxm"]);
+  if (enabled["rxm_sfrb"])
+    gps.subscribe<ublox_msgs::RxmSFRBX>(boost::bind(
+        publish<ublox_msgs::RxmSFRBX>, _1, "rxmsfrb"), kSubscribeRate);
+  
+  // Subscribe to RawX messages
+  nh->param("publish/rxm/rawx", enabled["rxm_rawx"], enabled["rxm"]);
+  if (enabled["rxm_rawx"])
+    gps.subscribe<ublox_msgs::RxmRAWX>(boost::bind(
+        publish<ublox_msgs::RxmRAWX>, _1, "rxmrawx"), kSubscribeRate);
 }
 
 void HpgRefProduct::callbackNavSvIn(ublox_msgs::NavSVIN m) {
@@ -1650,6 +1695,24 @@ void HpgRovProduct::subscribe() {
   // Subscribe to Nav Relative Position NED messages (also updates diagnostics)
   gps.subscribe<ublox_msgs::NavRELPOSNED>(boost::bind(
      &HpgRovProduct::callbackNavRelPosNed, this, _1), kSubscribeRate);
+ 
+  // Subscribe to SFRBX messages
+  nh->param("publish/rxm/sfrb", enabled["rxm_sfrb"], enabled["rxm"]);
+  if (enabled["rxm_sfrb"])
+    gps.subscribe<ublox_msgs::RxmSFRBX>(boost::bind(
+        publish<ublox_msgs::RxmSFRBX>, _1, "rxmsfrb"), kSubscribeRate);
+  
+  // Subscribe to RawX messages
+  nh->param("publish/rxm/rawx", enabled["rxm_rawx"], enabled["rxm"]);
+  if (enabled["rxm_rawx"])
+    gps.subscribe<ublox_msgs::RxmRAWX>(boost::bind(
+        publish<ublox_msgs::RxmRAWX>, _1, "rxmrawx"), kSubscribeRate);
+        
+  // Subscribe to RXM Meas
+  nh->param("publish/rxm/measx", enabled["rxm_measx"], enabled["rxm"]);
+  if (enabled["rxm_measx"])
+    gps.subscribe<ublox_msgs::RxmMeasX>(boost::bind(
+        publish<ublox_msgs::RxmMeasX>, _1, "rxmmeasx"), kSubscribeRate);
 }
 
 void HpgRovProduct::initializeRosDiagnostics() {
@@ -1853,10 +1916,10 @@ void TimProduct::subscribe() {
         publish<ublox_msgs::RxmSFRBX>, _1, "rxmsfrb"), kSubscribeRate);
 	
    // Subscribe to RawX messages
-   nh->param("publish/rxm/raw", enabled["rxm_raw"], enabled["rxm"]);
-   if (enabled["rxm_raw"])
+   nh->param("publish/rxm/rawx", enabled["rxm_rawx"], enabled["rxm"]);
+   if (enabled["rxm_rawx"])
      gps.subscribe<ublox_msgs::RxmRAWX>(boost::bind(
-        publish<ublox_msgs::RxmRAWX>, _1, "rxmraw"), kSubscribeRate);
+        publish<ublox_msgs::RxmRAWX>, _1, "rxmrawx"), kSubscribeRate);
 }
 
 void TimProduct::callbackTimTM2(const ublox_msgs::TimTM2 &m) {

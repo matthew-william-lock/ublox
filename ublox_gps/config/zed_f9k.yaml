@@ -14,9 +14,11 @@ use_adr: true                # Whether to enable dead reckoning
 inf:
   all: false                 # Whether to display all INF messages in console
 
+tmode3: 0
+
 # Enable necessary u-blox message publishers
 publish:
-  all: false
+  all: true
   esf:
     meas: true
   nav:
@@ -24,3 +26,5 @@ publish:
     pvt: true
     posecef: false
     hpposllh: true
+  rxm:
+    rawx: true

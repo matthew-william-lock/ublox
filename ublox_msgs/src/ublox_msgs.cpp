@@ -122,6 +122,8 @@ DECLARE_UBLOX_MESSAGE(ublox_msgs::Class::RXM, ublox_msgs::Message::RXM::SFRBX,
                       ublox_msgs, RxmSFRBX);
 DECLARE_UBLOX_MESSAGE(ublox_msgs::Class::RXM, ublox_msgs::Message::RXM::SVSI, 
                       ublox_msgs, RxmSVSI);
+DECLARE_UBLOX_MESSAGE(ublox_msgs::Class::RXM, ublox_msgs::Message::RXM::MEASX, 
+                      ublox_msgs, RxmMeasX);
 
 DECLARE_UBLOX_MESSAGE(ublox_msgs::Class::CFG, ublox_msgs::Message::CFG::ANT, 
                       ublox_msgs, CfgANT);

@@ -1,5 +1,10 @@
+
+debug: 1
 device: /dev/ttyACM0
 frame_id: gps
+tmode3: 0
 uart1:
-  baudrate: 38400
-config_on_startup: false
+  baudrate: 460800
+publish:
+  all: true
+  
